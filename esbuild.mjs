@@ -5,8 +5,8 @@ const config = {
   target: "es2020",
   format: "esm",
   entryPoints: [
-    "./dev/index.js",
-    "./dev/style.css"
+    "./src/js/index.js",
+    "./src/css/style.css"
   ],
   outdir: 'out',
 };

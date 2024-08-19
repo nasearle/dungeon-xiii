@@ -1,10 +1,9 @@
-import { PlayerSprite } from "./sprites/player";
+import { Player } from "./entities/player";
 
 const state = {};
 let player;
-
-const CANVAS = document.querySelector('canvas#ctx');
-const CONTEXT = CANVAS.getContext('2d');
+let CANVAS;
+let CTX;
 
 function getViewportDimensions() {
   // Different on different browsers?
@@ -12,29 +11,31 @@ function getViewportDimensions() {
     width: Math.min(window.innerWidth, document.body.clientWidth),
     height: Math.min(window.innerHeight, document.body.clientHeight)
   };
-}
+};
 
 function setCanvasDetails(viewportDimensions) {
   CANVAS.width = viewportDimensions.width;
   CANVAS.height = viewportDimensions.height;
 
   // Canvas settings get reset on resize
-  CONTEXT.font = '12px Courier New';
-  CONTEXT.textAlign = 'center';
-}
+  CTX.font = '12px Courier New';
+  CTX.textAlign = 'center';
+};
 
 function renderLoop() {
-  CONTEXT.fillStyle = 'blue';
-  CONTEXT.fillRect(0, 0, CANVAS.width, CANVAS.height);
+  CTX.fillStyle = 'blue';
+  CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
 
   player.render();
 
   window.requestAnimationFrame(renderLoop);
 };
 
-function init() {
+onload = () => {
+  CANVAS = document.querySelector('canvas#ctx');
+  CTX = CANVAS.getContext('2d');
+
   const startScreen = document.querySelector('#startScreen');
-  const gameOverScreen = document.querySelector('#gameOverScreen');
   const gameUi = document.querySelector('#gameUi');
   const btnStartGame = document.querySelector('#btnStartGame');
 
@@ -50,13 +51,11 @@ function init() {
       y: 150,
       width: 32,
       height: 32,
-      context: CONTEXT
+      ctx: CTX
     }
     
-    player = new PlayerSprite(playerInfo);
+    player = new Player(playerInfo);
 
     window.requestAnimationFrame(renderLoop);
   }
-}
-
-window.addEventListener('load', init, false);
+};

@@ -1,4 +1,4 @@
-class PlayerSprite {
+class Player {
   constructor(config) {
     for (const prop in config) {
       this[prop] = config[prop];
@@ -8,9 +8,9 @@ class PlayerSprite {
   }
 
   render() {
-    this.context.fillStyle = this.color;
-    this.context.fillRect(this.x, this.y, this.width, this.height);
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 };
 
-export { PlayerSprite };
+export { Player };
