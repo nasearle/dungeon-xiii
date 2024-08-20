@@ -2,12 +2,14 @@
 
 A web game created for the 2024 [js13k game development competition](https://js13kgames.com/).
 
-## -- TEMP INSTRUCTIONS TO START --
+## Running locally
 
-`npm install`
+From the root directory, install all dependencies:
 
-`npm run compile`
+    npm install
 
-Manually copy index.html to the out folder.
+Run build:
 
-Start server in out folder.
+    npm run build
+
+Start a local server in the `dist` folder.
