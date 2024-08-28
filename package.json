@@ -13,5 +13,8 @@
   "description": "A web game created for the 2024 [js13k game development competition](https://js13kgames.com/).",
   "main": "index.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "kontra": "^10.0.2"
+  }
 }

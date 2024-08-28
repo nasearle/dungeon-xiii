@@ -1,61 +1,41 @@
-import { Player } from "./entities/player";
+import { init, GameLoop } from 'kontra';
+import { Player } from './entities/player';
+import { createEnemy } from './entities/enemy';
 
-const state = {};
-let player;
-let CANVAS;
-let CTX;
+const { canvas } = init();
 
-function getViewportDimensions() {
-  // Different on different browsers?
-  return {
-    width: Math.min(window.innerWidth, document.body.clientWidth),
-    height: Math.min(window.innerHeight, document.body.clientHeight)
-  };
-};
+const sprites = [];
 
-function setCanvasDetails(viewportDimensions) {
-  CANVAS.width = viewportDimensions.width;
-  CANVAS.height = viewportDimensions.height;
+for (let i = 0; i < 4; i++) {
+  sprites.push(createEnemy());
+}
 
-  // Canvas settings get reset on resize
-  CTX.font = '12px Courier New';
-  CTX.textAlign = 'center';
-};
+sprites.push(Player);
 
-function renderLoop() {
-  CTX.fillStyle = 'blue';
-  CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
-
-  player.render();
-
-  window.requestAnimationFrame(renderLoop);
-};
-
-onload = () => {
-  CANVAS = document.querySelector('canvas#ctx');
-  CTX = CANVAS.getContext('2d');
-
-  const startScreen = document.querySelector('#startScreen');
-  const gameUi = document.querySelector('#gameUi');
-  const btnStartGame = document.querySelector('#btnStartGame');
-
-  btnStartGame.onclick = () => {
-    const viewportDimensions = getViewportDimensions();
-    setCanvasDetails(viewportDimensions);
-
-    startScreen.classList.add('hidden');
-    gameUi.classList.remove('hidden');
-
-    const playerInfo = {
-      x: 150,
-      y: 150,
-      width: 32,
-      height: 32,
-      ctx: CTX
+const loop = GameLoop({
+  update() {
+   for (const sprite of sprites) {
+      sprite.update();
+      if (sprite.x < -sprite.radius) {
+        sprite.x = canvas.width + sprite.radius;
+      }
+      else if (sprite.x > canvas.width + sprite.radius) {
+        sprite.x = 0 - sprite.radius;
+      }
+      if (sprite.y < -sprite.radius) {
+        sprite.y = canvas.height + sprite.radius;
+      }
+      else if (sprite.y > canvas.height + sprite.radius) {
+        sprite.y = -sprite.radius;
+      }
     }
-    
-    player = new Player(playerInfo);
-
-    window.requestAnimationFrame(renderLoop);
+  },
+  render() {
+    for (const sprite of sprites) {
+      sprite.render();
+    }
   }
-};
+});
+
+loop.start();
+
