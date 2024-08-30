@@ -1,9 +1,7 @@
-import {
-  Sprite,
-  initKeys,
-  keyPressed } from 'kontra';
-
-initKeys();
+import { Sprite, keyPressed, pointerPressed, getPointer } from 'kontra';
+import { scene } from '../scene';
+import { angleBetween } from '../util';
+import { createBullet } from './bullet';
 
 const Player = Sprite({
   type: 'player',
@@ -18,7 +16,15 @@ const Player = Sprite({
     this.context.stroke();
   },
   update() {
+    if (pointerPressed('left')){
+      const pointer = getPointer();
+      const angle = angleBetween(this, pointer);
+      scene.add(createBullet(this.x, this.y, angle));
+    }
+
     // TODO: limit movement to max speed when moving diagonally
+    // TODO: if more than one key is pressed, the latest key should take
+    // precedence
     if (keyPressed('a')) {
       this.x += -this.maxSpeed;
     }

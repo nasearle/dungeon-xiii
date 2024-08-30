@@ -1,20 +1,22 @@
-import { init, GameLoop } from 'kontra';
+import { init, GameLoop, initKeys, initPointer } from 'kontra';
+import { scene } from './scene';
 import { Player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 
 const { canvas } = init();
+initKeys();
+initPointer();
 
-const sprites = [];
+scene.add(Player);
 
 for (let i = 0; i < 4; i++) {
-  sprites.push(createEnemy());
+  scene.add(createEnemy());
 }
-
-sprites.push(Player);
 
 const loop = GameLoop({
   update() {
-   for (const sprite of sprites) {
+    scene.update();
+    for (const sprite of scene.objects) {
       sprite.update();
       if (sprite.x < -sprite.radius) {
         sprite.x = canvas.width + sprite.radius;
@@ -31,9 +33,7 @@ const loop = GameLoop({
     }
   },
   render() {
-    for (const sprite of sprites) {
-      sprite.render();
-    }
+    scene.render();
   }
 });
 
