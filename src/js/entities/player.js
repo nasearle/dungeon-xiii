@@ -4,7 +4,7 @@ import {
   pointerPressed,
   getPointer,
   onPointer } from 'kontra';
-import { angleToTarget } from '../util';
+import { angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
 import { scene } from '../scene';
 

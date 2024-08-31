@@ -1,11 +1,14 @@
 import { init, GameLoop, initKeys, initPointer } from 'kontra';
+import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
 import { player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { bulletPool } from './entities/bullet';
 import { createAmmo } from './hud/ammo';
 
-const { canvas } = init();
+const { canvas, context } = init();
+initResizer();
+resize();
 initKeys();
 initPointer();
 
@@ -42,6 +45,10 @@ const loop = GameLoop({
     }
   },
   render() {
+    // temp background color, maybe replace with tile system eventually
+    context.fillStyle = '#18181a';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
     scene.render();
     bulletPool.render();
   }
