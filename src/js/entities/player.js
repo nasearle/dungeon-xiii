@@ -1,14 +1,21 @@
-import { Sprite, keyPressed, pointerPressed, getPointer } from 'kontra';
-import { scene } from '../scene';
-import { angleBetween } from '../util';
+import {
+  Sprite,
+  keyPressed,
+  pointerPressed,
+  getPointer,
+  onPointer } from 'kontra';
+import { angleToTarget } from '../util';
 import { createBullet } from './bullet';
+import { scene } from '../scene';
 
-const Player = Sprite({
+const player = Sprite({
   type: 'player',
   x: 300,
   y: 300,
   radius: 30,
   maxSpeed: 3,
+  ammo: 13,
+  ableToShoot: true,
   render() {
     this.context.strokeStyle = 'white';
     this.context.beginPath();
@@ -16,10 +23,16 @@ const Player = Sprite({
     this.context.stroke();
   },
   update() {
-    if (pointerPressed('left')){
+    if (pointerPressed('left') && this.ableToShoot && this.ammo > 0) {
+      const lastAmmo = scene.objects.findLast(obj => {
+        return obj.type == 'ammo'
+      })
+      scene.remove(lastAmmo);
+      this.ammo -= 1;
+      this.ableToShoot = false;
       const pointer = getPointer();
-      const angle = angleBetween(this, pointer);
-      scene.add(createBullet(this.x, this.y, angle));
+      const angle = angleToTarget(this, pointer);
+      createBullet(this.x, this.y, angle);
     }
 
     // TODO: limit movement to max speed when moving diagonally
@@ -40,4 +53,8 @@ const Player = Sprite({
   }
 });
 
-export { Player };
+onPointer('up', function() {
+  player.ableToShoot = true;
+});
+
+export { player };
