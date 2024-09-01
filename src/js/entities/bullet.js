@@ -15,7 +15,7 @@ function createBullet(x, y, angle) {
     dy: Math.sin((angle / 180) * Math.PI) * 5,
     radius: 10,
     ttl: 100,
-    handleWallCollision() {
+    handleCollision() {
       //TODO: Add an animation.
       this.ttl = 1;
     },

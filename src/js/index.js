@@ -2,10 +2,12 @@ import { init, GameLoop, initKeys, initPointer } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
 import { player } from './entities/player';
-import { Direction } from './entities/wall';
 import { createEnemy } from './entities/enemy';
+import { createTileEngine } from './level/tiles';
 import { bulletPool } from './entities/bullet';
 import { createAmmo } from './hud/ammo';
+// TODO: Dramatically reduce tileset size...
+import tilesheetImg from '../img/mapPack_tilesheet.png';
 
 const { canvas, context } = init();
 initResizer();
@@ -13,48 +15,57 @@ resize();
 initKeys();
 initPointer();
 
-scene.add(player);
+// TODO: consider using Kontra asset loader. I couldn't figure out
+// how to get it to work with Webpack.
+const tileSheet = new Image();
+tileSheet.src = tilesheetImg;
+tileSheet.onload = function() {
 
-for (let i = 0; i < 4; i++) {
-  scene.add(createEnemy());
-}
+  const tileEngine = createTileEngine(tileSheet);
 
-for (let i = 0; i < player.ammo; i++) {
-  scene.add(createAmmo(10 * i + 20, 25));
-}
+  scene.add(player);
 
-scene.add(bulletPool);
-
-const loop = GameLoop({
-  update() {
-    scene.update();
-    bulletPool.update();
-    for (const sprite of scene.objects) {
-      sprite.update();
-
-      if (sprite.x - sprite.radius < 0) {
-        sprite.handleWallCollision(Direction.LEFT);
-      }
-      else if (sprite.x + sprite.radius > canvas.width) {
-        sprite.handleWallCollision(Direction.RIGHT);
-      }
-      if (sprite.y - sprite.radius < 0) {
-        sprite.handleWallCollision(Direction.UP);
-      }
-      else if (sprite.y + sprite.radius > canvas.height) {
-        sprite.handleWallCollision(Direction.DOWN);
-      }
-    }
-  },
-  render() {
-    // temp background color, maybe replace with tile system eventually
-    context.fillStyle = '#18181a';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    scene.render();
-    bulletPool.render();
+  for (let i = 0; i < 4; i++) {
+    scene.add(createEnemy());
   }
-});
 
-loop.start();
+  for (let i = 0; i < player.ammo; i++) {
+    scene.add(createAmmo(10 * i + 20, 25));
+  }
 
+  scene.add(bulletPool);
+
+  const loop = GameLoop({
+    update() {
+      scene.update();
+      bulletPool.update();
+      for (const sprite of scene.objects) {
+        sprite.update();
+
+        const hasCollidedWithObstacle =
+          tileEngine.layerCollidesWith('collision', sprite);
+        const hasCollidedWithWall =
+          sprite.x - sprite.radius < 0 ||
+          sprite.x + sprite.radius > canvas.width ||
+          sprite.y - sprite.radius < 0 ||
+          sprite.y + sprite.radius > canvas.height;
+
+        if (hasCollidedWithObstacle || hasCollidedWithWall) {
+          sprite.handleCollision();
+        }
+      }
+    },
+    render() {
+      // TODO: temp background color, maybe replace with tile system eventually
+      context.fillStyle = '#18181a';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      tileEngine.render();
+
+      scene.render();
+      bulletPool.render();
+    }
+  });
+
+  loop.start();
+}

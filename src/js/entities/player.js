@@ -7,7 +7,6 @@ import {
 import { angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
 import { scene } from '../scene';
-import { Direction } from './wall'
 
 const player = Sprite({
   type: 'player',
@@ -19,33 +18,12 @@ const player = Sprite({
   maxSpeed: 3,
   ammo: 13,
   ableToShoot: true,
-  ableToMoveLeft: true,
-  ableToMoveRight: true,
-  ableToMoveUp: true,
-  ableToMoveDown: true,
-  handleWallCollision(wallDirection) {
-    switch (wallDirection) {
-      // Collision implies that the player is _already_ past the obstacle
-      // by one frame, so we need to bump them back the opposite direction.
-      case Direction.LEFT:
-        this.ableToMoveLeft = false;
-        this.x += this.maxSpeed;
-        break;
-      case Direction.RIGHT:
-        this.ableToMoveRight = false
-        this.x -= this.maxSpeed;
-        break;
-      case Direction.UP:
-        this.ableToMoveUp = false
-        this.y += this.maxSpeed;
-        break;
-      case Direction.DOWN:
-        this.ableToMoveDown = false
-        this.y -= this.maxSpeed;
-        break;
-      default:
-        throw new Error('Unknown wall direction');
-    }
+  handleCollision() {
+    // Reset sprite back before wall collision. 1 dx is insufficient and causes
+    // sticking, 3 dx causes visible bouncing. 2 dx just works. It's simpler
+    // to bump both x and y than to detect which direction the wall is.
+    this.x -= this.dx * 2;
+    this.y -= this.dy * 2;
   },
   render() {
     this.context.strokeStyle = 'white';
@@ -69,30 +47,27 @@ const player = Sprite({
     // TODO: limit movement to max speed when moving diagonally
     // TODO: if more than one key is pressed, the latest key should take
     // precedence
-    if (keyPressed('a') && this.ableToMoveLeft) {
+    if (keyPressed('a')) {
       this.dx = -this.maxSpeed;
     }
-    else if (keyPressed('d') && this.ableToMoveRight) {
+    else if (keyPressed('d')) {
       this.dx = this.maxSpeed;
     }
     else {
       this.dx = 0;
     }
 
-    if (keyPressed('s') && this.ableToMoveDown) {
+    if (keyPressed('s')) {
       this.dy = this.maxSpeed;
     }
-    else if (keyPressed('w') && this.ableToMoveUp) {
+    else if (keyPressed('w')) {
       this.dy = -this.maxSpeed;
     }
     else {
       this.dy = 0;
     }
+
     this.advance();
-    this.ableToMoveLeft = true;
-    this.ableToMoveRight = true;
-    this.ableToMoveUp = true;
-    this.ableToMoveDown = true;
   }
 });
 

@@ -13,3 +13,7 @@ Run build:
     npm run build
 
 Start a local server in the `dist` folder.
+
+Attribution
+
+* Assets courtesy of [Kenney](https://kenney.nl/assets)
