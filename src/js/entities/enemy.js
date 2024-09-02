@@ -11,12 +11,8 @@ function createEnemy() {
       this.dy = Math.random() * 4 - 2;
     },
     handleCollision() {
-      // Reset sprite back before wall collision. 1 dx is insufficient and
-      // causes sticking, 3 dx causes visible bouncing. 2 dx just works. It's
-      // simpler to bump both x and y than to detect which direction the wall
-      // is.
-      this.x -= this.dx * 2;
-      this.y -= this.dy * 2;
+      this.x -= this.dx;
+      this.y -= this.dy;
       this.setRandomDirection();
     },
     render() {

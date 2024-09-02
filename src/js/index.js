@@ -40,8 +40,6 @@ tileSheet.onload = function() {
       scene.update();
       bulletPool.update();
       for (const sprite of scene.objects) {
-        sprite.update();
-
         const hasCollidedWithObstacle =
           tileEngine.layerCollidesWith('collision', sprite);
         const hasCollidedWithWall =
