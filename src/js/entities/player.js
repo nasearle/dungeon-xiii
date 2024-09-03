@@ -14,19 +14,15 @@ const player = Sprite({
   y: 300,
   dx: 0,
   dy: 0,
-  radius: 30,
+  height: 16,
+  width: 16,
+  color: 'white',
   maxSpeed: 3,
   ammo: 13,
   ableToShoot: true,
   handleCollision() {
     this.x -= this.dx;
     this.y -= this.dy;
-  },
-  render() {
-    this.context.strokeStyle = 'white';
-    this.context.beginPath();
-    this.context.arc(0, 0, this.radius, 0, Math.PI*2);
-    this.context.stroke();
   },
   update() {
     if (pointerPressed('left') && this.ableToShoot && this.ammo > 0) {

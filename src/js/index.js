@@ -7,7 +7,7 @@ import { createTileEngine } from './level/tiles';
 import { bulletPool } from './entities/bullet';
 import { createAmmo } from './hud/ammo';
 // TODO: Dramatically reduce tileset size...
-import tilesheetImg from '../img/mapPack_tilesheet.png';
+import tilesheetImg from '../img/tilesheet.png';
 
 const { canvas, context } = init();
 initResizer();
