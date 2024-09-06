@@ -6,6 +6,12 @@ function radAngleToTarget(start, target) {
   return Math.atan2(target.y - start.y, target.x - start.x);
 }
 
+function distanceToTarget(start, target) {
+  const a = target.x - start.x;
+  const b = target.y - start.y;
+  return Math.sqrt(a * a + b * b);
+}
+
 function convertArrayToMatrix(arr, width, height) {
   const matrix = [];
   for (let i = 0; i < height; i++) {
@@ -54,4 +60,10 @@ function intersect(line1, line2) {
 	return {x, y, dist}
 }
 
-export { angleToTarget, radAngleToTarget, intersect, convertArrayToMatrix };
+export {
+  angleToTarget,
+  radAngleToTarget,
+  intersect,
+  convertArrayToMatrix,
+  distanceToTarget
+};

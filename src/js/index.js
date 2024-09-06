@@ -8,7 +8,6 @@ import { bulletPool } from './entities/bullet';
 import { createAmmo } from './hud/ammo';
 // TODO: Dramatically reduce tileset size...
 import tilesheetImg from '../img/tilesheet.png';
-
 import { Light } from './entities/light';
 
 const { canvas, context } = init();
@@ -16,8 +15,6 @@ initResizer();
 resize();
 initKeys();
 initPointer();
-
-const light = new Light();
 
 // TODO: consider using Kontra asset loader. I couldn't figure out
 // how to get it to work with Webpack.
@@ -28,6 +25,7 @@ tileSheet.onload = function() {
   const tileEngine = createTileEngine(tileSheet);
 
   scene.add(player);
+  const light = new Light({entity: player});
 
   for (let i = 0; i < 4; i++) {
     scene.add(createEnemy());
@@ -64,10 +62,8 @@ tileSheet.onload = function() {
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       tileEngine.render();
-
       scene.render();
       bulletPool.render();
-
       light.render();
     }
   });

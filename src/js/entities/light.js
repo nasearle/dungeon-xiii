@@ -1,5 +1,4 @@
-import { player } from "./player";
-import { radAngleToTarget, intersect } from "../util/util";
+import { radAngleToTarget, intersect, distanceToTarget } from "../util/util";
 import { Wireframe } from "../level/wireframe";
 
 const canvas = document.querySelector('canvas');
@@ -8,32 +7,33 @@ const ctx = canvas.getContext('2d');
 const wireframe = new Wireframe();
 
 class Light {
-  constructor() {
+  constructor(config) {
+    this.parent = config.entity;
     this.sourceColor = 'rgba(255, 255, 255, 0.2)';
     this.distanceColor = 'rgba(255, 255, 255, 0)';
     this.minFalloff = 100;
     this.maxFalloff = 300;
-    this.rayStart = {
-      x: player.x + player.width / 2,
-      y: player.y + player.height / 2
+    this.origin = {
+      x: this.parent.x + this.parent.width / 2,
+      y: this.parent.y + this.parent.height / 2
     };
     this.rayEndpoints = [];
   }
 
-  // Returns two arrays on either side of the original at +/- 0.00001 radians.
-  getAdjacentRays(start, angle) {
+  // Returns two rays on either side of the original at +/- 0.00001 radians.
+  getAdjacentRays(angle) {
     const r = 1280;
     const posAngle = angle + 0.00001;
     const negAngle = angle - 0.00001;
     return [
-      [start, {
-        x: start.x + r * Math.cos(posAngle),
-        y: start.y + r * Math.sin(posAngle),
+      [this.origin, {
+        x: this.origin.x + r * Math.cos(posAngle),
+        y: this.origin.y + r * Math.sin(posAngle),
         angle: posAngle
       }],
-      [start, {
-        x: start.x + r * Math.cos(negAngle),
-        y: start.y + r * Math.sin(negAngle),
+      [this.origin, {
+        x: this.origin.x + r * Math.cos(negAngle),
+        y: this.origin.y + r * Math.sin(negAngle),
         angle: negAngle
       }]
     ]
@@ -43,15 +43,15 @@ class Light {
     const rays = [];
 
     // For each point in the wireframe (represents a corner of a wall), create a
-    // ray that points to it and two arrays very close on either side (so the
+    // ray that points to it and two rays very close on either side (so the
     // light can continue beyond the corner). 
     for (const point of wireframe.points) {
-      const angle = radAngleToTarget(this.rayStart, point);
-      let adjRays = this.getAdjacentRays(this.rayStart, angle);
+      const angle = radAngleToTarget(this.origin, point);
+      let adjRays = this.getAdjacentRays(angle);
 
       // Array of three rays, original and two adjacent.
       const rayGroup = [
-        [this.rayStart, {x: point.x, y: point.y, angle: angle}],
+        [this.origin, {x: point.x, y: point.y, angle: angle}],
         ...adjRays
       ]
       // For these three rays, loop through every line in the map wireframe and
@@ -67,7 +67,7 @@ class Light {
           }
         }
         const endpoint = {x: intersectPoint.x, y: intersectPoint.y, angle: ray[1].angle};        
-        rays.push([this.rayStart, endpoint]);
+        rays.push([this.origin, endpoint]);
         // Keep track of all the new ray endpoints so they can be used to draw
         // the light polygon.
         this.rayEndpoints.push(endpoint);
@@ -85,8 +85,8 @@ class Light {
   }
 
   lightGradient() {
-    const x = this.rayStart.x,
-          y = this.rayStart.y,
+    const x = this.origin.x,
+          y = this.origin.y,
           inner = this.minFalloff,
           outer = this.maxFalloff;
 
@@ -96,6 +96,16 @@ class Light {
 
     return gradient;
   }
+  /*
+  If performance becomes an issue we could use something like this to reduce the
+  number of rays.
+  */
+  // filterPoints() {
+  //   const filteredPoints = this.rayEndpoints.filter((point) => {
+  //     return distanceToTarget(this.origin, point) <= this.maxFalloff
+  //   });
+  //   this.rayEndpoints.splice(0, this.rayEndpoints.length, ...filteredPoints);
+  // }
 
   drawPolygon(points) {
     ctx.fillStyle = this.lightGradient();
@@ -113,12 +123,13 @@ class Light {
   }
 
   update() {
-    this.rayStart = {
-      x: player.x + player.width / 2,
-      y: player.y + player.height / 2
+    this.origin = {
+      x: this.parent.x + this.parent.width / 2,
+      y: this.parent.y + this.parent.height / 2
     };
     this.rayEndpoints = [];
     this.createRays();
+    // this.filterPoints();
     this.rayEndpoints.sort((a,b) => a.angle - b.angle);
   }
 
