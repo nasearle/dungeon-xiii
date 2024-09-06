@@ -34,7 +34,8 @@ const player = Sprite({
       this.ableToShoot = false;
       const pointer = getPointer();
       const angle = angleToTarget(this, pointer);
-      createBullet(this.x, this.y, angle);
+      // idk if the player should be responsible for adding things to the scene.
+      scene.add(createBullet(this.x, this.y, angle));
     }
 
     // TODO: limit movement to max speed when moving diagonally

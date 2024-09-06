@@ -1,12 +1,7 @@
-import { Pool, Sprite } from 'kontra';
-
-// TODO: using a bullet pool is overkill. revert to single Sprite.
-const bulletPool = Pool({
-  create: Sprite
-});
+import { Sprite } from 'kontra';
 
 function createBullet(x, y, angle) {
-  bulletPool.get({
+  return Sprite({
     type: 'bullet',
     x: x,
     y: y,
@@ -17,7 +12,7 @@ function createBullet(x, y, angle) {
     ttl: 100,
     handleCollision() {
       //TODO: Add an animation.
-      this.ttl = 1;
+      this.ttl = 0;
     },
     render() {
       this.context.strokeStyle = 'green';
@@ -28,4 +23,4 @@ function createBullet(x, y, angle) {
   });
 }
 
-export { createBullet, bulletPool };
+export { createBullet };

@@ -4,7 +4,6 @@ import { scene } from './scene';
 import { player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
-import { bulletPool } from './entities/bullet';
 import { createAmmo } from './hud/ammo';
 // TODO: Dramatically reduce tileset size...
 import tilesheetImg from '../img/tilesheet.png';
@@ -23,8 +22,8 @@ tileSheet.src = tilesheetImg;
 tileSheet.onload = function() {
 
   const tileEngine = createTileEngine(tileSheet);
-
   scene.add(player);
+
   const light = new Light({entity: player});
 
   for (let i = 0; i < 4; i++) {
@@ -34,13 +33,10 @@ tileSheet.onload = function() {
   for (let i = 0; i < player.ammo; i++) {
     scene.add(createAmmo(10 * i + 20, 25));
   }
-
-  scene.add(bulletPool);
-
+  
   const loop = GameLoop({
     update() {
-      scene.update();
-      bulletPool.update();
+      scene.customUpdate();
       for (const sprite of scene.objects) {
         const hasCollidedWithObstacle =
           tileEngine.layerCollidesWith('collision', sprite);
@@ -63,7 +59,6 @@ tileSheet.onload = function() {
 
       tileEngine.render();
       scene.render();
-      bulletPool.render();
       light.render();
     }
   });
