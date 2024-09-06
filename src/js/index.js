@@ -9,11 +9,15 @@ import { createAmmo } from './hud/ammo';
 // TODO: Dramatically reduce tileset size...
 import tilesheetImg from '../img/tilesheet.png';
 
+import { Light } from './entities/light';
+
 const { canvas, context } = init();
 initResizer();
 resize();
 initKeys();
 initPointer();
+
+const light = new Light();
 
 // TODO: consider using Kontra asset loader. I couldn't figure out
 // how to get it to work with Webpack.
@@ -52,6 +56,7 @@ tileSheet.onload = function() {
           sprite.handleCollision();
         }
       }
+      light.update();
     },
     render() {
       // TODO: temp background color, maybe replace with tile system eventually
@@ -62,6 +67,8 @@ tileSheet.onload = function() {
 
       scene.render();
       bulletPool.render();
+
+      light.render();
     }
   });
 
