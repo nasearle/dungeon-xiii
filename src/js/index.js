@@ -1,4 +1,4 @@
-import { init, GameLoop, initKeys, initPointer } from 'kontra';
+import { init, GameLoop, initKeys, initPointer, collides } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
 import { player } from './entities/player';
@@ -41,13 +41,25 @@ tileSheet.onload = function() {
         const hasCollidedWithObstacle =
           tileEngine.layerCollidesWith('collision', sprite);
         const hasCollidedWithWall =
-          sprite.x - sprite.radius < 0 ||
-          sprite.x + sprite.radius > canvas.width ||
-          sprite.y - sprite.radius < 0 ||
-          sprite.y + sprite.radius > canvas.height;
+          sprite.x < 0 ||
+          sprite.x + sprite.width > canvas.width ||
+          sprite.y < 0 ||
+          sprite.y + sprite.height > canvas.height;
 
         if (hasCollidedWithObstacle || hasCollidedWithWall) {
           sprite.handleCollision();
+        }
+
+        // TODO: move to bullet or enemy objects to avoid nested loop?
+        if (sprite.type == 'bullet') {
+          for (const enemy of scene.objects) {
+            if (enemy.type == 'enemy') {
+              if (collides(sprite, enemy)) {
+                scene.remove(sprite);
+                scene.remove(enemy);
+              }
+            }
+          }
         }
       }
       light.update();

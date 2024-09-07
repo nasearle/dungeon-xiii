@@ -1,24 +1,20 @@
 import { Sprite } from 'kontra';
 
-function createBullet(x, y, angle) {
+function createBullet(x, y, angle, width, height) {
   return Sprite({
     type: 'bullet',
-    x: x,
-    y: y,
+    x: x - width / 2,
+    y: y - height / 2,
     speed: 5,
     dx: Math.cos((angle / 180) * Math.PI) * 5,
     dy: Math.sin((angle / 180) * Math.PI) * 5,
-    radius: 10,
+    height: height,
+    width: width,
+    color:'green',
     ttl: 100,
     handleCollision() {
       //TODO: Add an animation.
       this.ttl = 0;
-    },
-    render() {
-      this.context.strokeStyle = 'green';
-      this.context.beginPath();
-      this.context.arc(0, 0, this.radius, 0, Math.PI*2);
-      this.context.stroke();
     }
   });
 }
