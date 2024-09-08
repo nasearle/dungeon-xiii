@@ -1,6 +1,7 @@
 import { init, GameLoop, initKeys, initPointer, collides } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
+import { initMenu, endGame } from './menu';
 import { player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
@@ -49,19 +50,33 @@ tileSheet.onload = function() {
           sprite.handleCollision();
         }
 
-        // TODO: move to bullet or enemy objects to avoid nested loop?
-        if (sprite.type == 'bullet') {
-          for (const enemy of scene.objects) {
-            if (enemy.type == 'enemy') {
-              if (collides(sprite, enemy)) {
+        /* TODO: Optimize? We could track additional entity references to
+         avoid duplicated entity checks. For example instead of check all
+         entities against all other entities, we could check enemies explicitly
+         against bullets and the player. Not critical now, as we have
+         O(10) sprites, so even N*N is only O(100) operations.
+        */
+        if (sprite.type == 'enemy') {
+          for (const otherSprite of scene.objects) {
+            if (otherSprite.type == 'bullet') {
+              if (collides(sprite, otherSprite)) {
                 scene.remove(sprite);
-                scene.remove(enemy);
+                scene.remove(otherSprite);
+              }
+            }
+            // Enemy collisions result in Game Over condition.
+            else if (otherSprite.type == 'player') {
+              if (collides(sprite, otherSprite)) {
+                player.ttl = 0;
               }
             }
           }
         }
       }
       light.update();
+      if (!player.isAlive()) {
+        endGame(loop);
+      }
     },
     render() {
       // TODO: temp background color, maybe replace with tile system eventually
@@ -74,5 +89,5 @@ tileSheet.onload = function() {
     }
   });
 
-  loop.start();
+  initMenu(loop);
 }

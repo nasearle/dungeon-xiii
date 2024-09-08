@@ -1,5 +1,7 @@
 body {
   background: black;
+  color: whitesmoke;
+  font-family: 'Courier New', Courier, monospace;
   margin: 0;
   padding: 0;
 }
@@ -15,4 +17,80 @@ canvas {
   display: block;
   position: relative;
   cursor: crosshair;
+}
+
+.screen {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.menu {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  font-family: 'Courier New', Courier, monospace;
+  height: 50%;
+  justify-content: center;
+  width: 50%;
+  padding: 0 0 20px 0;
+  max-width: 600px;
+  min-height: 650px;
+}
+
+.menu-item {
+  display: flex;
+  width: 75%;
+  margin: 10px 0 20px 0;
+  padding: 10px 0;
+  flex-direction: column;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.column input {
+  width: 200px;
+}
+
+
+.btn {
+  font-family: 'Courier New', Courier, monospace;
+  color: whitesmoke;
+  background-color: #000;
+  font-size: 15px;
+  height: 40px;
+  width: 100px;
+  margin-bottom: 5px;
+}
+
+#btnStartGame {
+  width: 200px;
+}
+
+.btn:hover, .btn:focus {
+  color: #fff533;
+  border: 1px solid #fff533;
+}
+
+.footer-url {
+  position: fixed;
+  bottom: 30px;
+  color: #33e0ff;
+}
+
+/* Keep this last to overwrite. */
+.hidden {
+  display: none;
 }
