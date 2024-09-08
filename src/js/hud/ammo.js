@@ -8,7 +8,7 @@ function renderAmmoCount(x, y) {
     width: 5,
     height: 10,
     color: 'yellow',
-    render: function() {
+    render() {
       this.context.fillStyle = this.color;
       this.context.fillRect(0, 0, this.width, this.height);
       this.context.beginPath();

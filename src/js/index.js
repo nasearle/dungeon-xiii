@@ -7,6 +7,7 @@ import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
 import { renderAmmoCount } from './hud/ammo';
 import tilesheetImg from '../img/tilesheet.png';
+import { Wireframe } from './level/wireframe';
 import { Light } from './entities/light';
 
 const { canvas, context } = init();
@@ -24,10 +25,15 @@ tileSheet.onload = function() {
   const tileEngine = createTileEngine(tileSheet);
   scene.add(player);
 
-  const light = new Light({entity: player});
+  const wireframe = new Wireframe();
+  const light = new Light({
+    context: context,
+    entity: player,
+    wireframe: wireframe
+  });
 
   for (let i = 0; i < 4; i++) {
-    scene.add(createEnemy());
+    scene.add(createEnemy({ player: player, wireframe: wireframe }));
   }
 
   for (let i = 0; i < player.ammo; i++) {

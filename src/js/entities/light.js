@@ -1,14 +1,10 @@
 import { radAngleToTarget, intersect, distanceToTarget } from "../util/util";
-import { Wireframe } from "../level/wireframe";
-
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-
-const wireframe = new Wireframe();
 
 class Light {
   constructor(config) {
+    this.ctx = config.context;
     this.parent = config.entity;
+    this.wireframe = config.wireframe;
     this.sourceColor = 'rgba(255, 255, 255, 0.2)';
     this.distanceColor = 'rgba(255, 255, 255, 0)';
     this.minFalloff = 100;
@@ -45,7 +41,7 @@ class Light {
     // For each point in the wireframe (represents a corner of a wall), create a
     // ray that points to it and two rays very close on either side (so the
     // light can continue beyond the corner). 
-    for (const point of wireframe.points) {
+    for (const point of this.wireframe.points) {
       const angle = radAngleToTarget(this.origin, point);
       let adjRays = this.getAdjacentRays(angle);
 
@@ -60,7 +56,7 @@ class Light {
       // becomes the new endpoint for that ray.
       for (let ray of rayGroup) {
         let intersectPoint = {x: ray[1].x, y: ray[1].y, dist: 2};
-        for (const line of wireframe.lines) {
+        for (const line of this.wireframe.lines) {
           const intersection = intersect(ray, line);
           if (intersection && intersection.dist < intersectPoint.dist) {
             intersectPoint = intersection;
@@ -77,11 +73,11 @@ class Light {
   }
 
   drawLine(line) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'green';
-    ctx.moveTo(line[0].x, line[0].y);
-    ctx.lineTo(line[1].x, line[1].y);
-    ctx.stroke();
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = 'green';
+    this.ctx.moveTo(line[0].x, line[0].y);
+    this.ctx.lineTo(line[1].x, line[1].y);
+    this.ctx.stroke();
   }
 
   lightGradient() {
@@ -90,7 +86,7 @@ class Light {
           inner = this.minFalloff,
           outer = this.maxFalloff;
 
-    const gradient = ctx.createRadialGradient(x, y, inner, x, y, outer);
+    const gradient = this.ctx.createRadialGradient(x, y, inner, x, y, outer);
     gradient.addColorStop(0, this.sourceColor);
     gradient.addColorStop(1, this.distanceColor);
 
@@ -108,18 +104,18 @@ class Light {
   // }
 
   drawPolygon(points) {
-    ctx.fillStyle = this.lightGradient();
-    ctx.beginPath();
+    this.ctx.fillStyle = this.lightGradient();
+    this.ctx.beginPath();
     
     points.forEach((point, index) => {
       if (index == 0) {
-        ctx.moveTo(point.x, point.y);
+        this.ctx.moveTo(point.x, point.y);
       } else {
-        ctx.lineTo(point.x, point.y);
+        this.ctx.lineTo(point.x, point.y);
       }
     });
-    ctx.closePath();
-    ctx.fill();
+    this.ctx.closePath();
+    this.ctx.fill();
   }
 
   update() {

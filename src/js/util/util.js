@@ -22,7 +22,8 @@ function convertArrayToMatrix(arr, width, height) {
 
 /* 
 Get the intersection point of two lines. Return false if the lines don't
-intersect.
+intersect. A line looks like:
+  [{x: 10, y: 20}, {x: 15, y: 25}]
 */ 
 function intersect(line1, line2) {
   const x1 = line1[0].x,
