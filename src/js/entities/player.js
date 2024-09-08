@@ -33,7 +33,11 @@ const player = Sprite({
       this.ammo -= 1;
       this.ableToShoot = false;
       const pointer = getPointer();
-      const angle = angleToTarget(this, pointer);
+      const playerCenter = {
+        x: this.x + this.width / 2,
+        y: this.y + this.height / 2
+      };
+      const angle = angleToTarget(playerCenter, pointer);
       // idk if the player should be responsible for adding things to the scene.
       scene.add(
         createBullet(
