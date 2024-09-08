@@ -10,7 +10,7 @@ function createBullet(x, y, angle, width, height) {
     dy: Math.sin((angle / 180) * Math.PI) * 5,
     height: height,
     width: width,
-    color:'green',
+    color:'yellow',
     ttl: 100,
     handleCollision() {
       //TODO: Add an animation.

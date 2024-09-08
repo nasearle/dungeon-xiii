@@ -4,13 +4,8 @@ const scene = Scene({
   id: 'game',
   objects: [],
   removeDeadObjects() {
-    // TODO: fix this. this changes an array while looping through it so it
-    // might be missing some objects and removing them on the next frame 😬
-    for (const obj of this.objects) {
-      if (!obj.isAlive()) {
-        scene.remove(obj);
-      }
-    }
+    const deadObjects = scene.objects.filter(obj => !obj.isAlive());
+    this.remove(deadObjects)
   },
   customUpdate() {
     this.removeDeadObjects();

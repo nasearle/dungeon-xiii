@@ -4,8 +4,7 @@ import { scene } from './scene';
 import { player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
-import { createAmmo } from './hud/ammo';
-// TODO: Dramatically reduce tileset size...
+import { renderAmmoCount } from './hud/ammo';
 import tilesheetImg from '../img/tilesheet.png';
 import { Light } from './entities/light';
 
@@ -31,9 +30,9 @@ tileSheet.onload = function() {
   }
 
   for (let i = 0; i < player.ammo; i++) {
-    scene.add(createAmmo(10 * i + 20, 25));
+    scene.add(renderAmmoCount(10 * i + 20, 25));
   }
-  
+
   const loop = GameLoop({
     update() {
       scene.customUpdate();
