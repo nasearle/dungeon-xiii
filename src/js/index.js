@@ -1,7 +1,7 @@
 import { init, GameLoop, initKeys, initPointer, collides } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
-import { initMenu, endGame } from './menu';
+import { initMenu, endGame, startGame } from './menu';
 import { player } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
@@ -96,4 +96,12 @@ tileSheet.onload = function() {
   });
 
   initMenu(loop);
+  // TODO: remove later if we need the space.
+  // Skip the main menu during development because it's annoying during hot
+  // reloads.
+  const urlParams = new URLSearchParams(window.location.search);
+  const debug = urlParams.get('debug');
+  if (debug) {
+    startGame();
+  }
 }

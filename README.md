@@ -14,6 +14,9 @@ Run build:
 
 Start a local server in the `dist` folder.
 
+Tip: Use `debug=true` query parameter to skip the landing page menu. For example
+`http://localhost:8080/index.html?debug=true`.
+
 Attribution
 
 * Assets courtesy of [Kenney](https://kenney.nl/assets)
