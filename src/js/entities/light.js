@@ -5,22 +5,23 @@ class Light {
     this.ctx = config.context;
     this.parent = config.entity;
     this.wireframe = config.wireframe;
+    this.tileEngine = config.tileEngine;
     this.sourceColor = 'rgba(255, 255, 255, 0.2)';
     this.distanceColor = 'rgba(255, 255, 255, 0)';
     this.minShadowColor = 'rgba(0, 0, 0, 0)';
     this.maxShadowColor = 'rgba(0, 0, 0, 0.85)';
-    this.minFalloff = 50;
-    this.maxFalloff = 275;
+    this.minFalloff = this.ctx.canvas.width * 0.04;
+    this.maxFalloff = this.ctx.canvas.width * 0.3;
     this.origin = {
-      x: this.parent.x + this.parent.width / 2,
-      y: this.parent.y + this.parent.height / 2
+      x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
+      y: this.parent.y + this.parent.height / 2 - this.tileEngine.sy
     };
     this.rayEndpoints = [];
   }
 
   // Returns two rays on either side of the original at +/- 0.00001 radians.
   getAdjacentRays(angle) {
-    const r = 1280;
+    const r = this.ctx.canvas.width;
     const posAngle = angle + 0.00001;
     const negAngle = angle - 0.00001;
     return [
@@ -125,7 +126,7 @@ class Light {
     const x = this.origin.x,
           y = this.origin.y,
           inner = this.minFalloff,
-          outer = this.maxFalloff + 400;
+          outer = this.maxFalloff + this.ctx.canvas.width * 0.32;
 
     const gradient = this.ctx.createRadialGradient(x, y, inner, x, y, outer);
     gradient.addColorStop(0, this.minShadowColor);
@@ -140,9 +141,10 @@ class Light {
   }
 
   update() {
+    // Subtract tileEngine sx and sy to account for the camera offset.
     this.origin = {
-      x: this.parent.x + this.parent.width / 2,
-      y: this.parent.y + this.parent.height / 2
+      x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
+      y: this.parent.y + this.parent.height / 2 - this.tileEngine.sy
     };
     this.rayEndpoints = [];
     this.createRays();

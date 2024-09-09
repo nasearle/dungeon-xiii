@@ -20,6 +20,14 @@ function convertArrayToMatrix(arr, width, height) {
   return matrix
 }
 
+function removeFromArray(array, item) {
+  let index = array.indexOf(item);
+  if (index != -1) {
+    array.splice(index, 1);
+    return true;
+  }
+}
+
 /* 
 Get the intersection point of two lines. Return false if the lines don't
 intersect. A line looks like:
@@ -66,5 +74,6 @@ export {
   radAngleToTarget,
   intersect,
   convertArrayToMatrix,
-  distanceToTarget
+  distanceToTarget,
+  removeFromArray
 };

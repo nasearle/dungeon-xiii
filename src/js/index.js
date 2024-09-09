@@ -2,7 +2,7 @@ import { init, GameLoop, initKeys, initPointer, collides } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
 import { initMenu, endGame, startGame } from './menu';
-import { player } from './entities/player';
+import { createPlayer } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
 import { renderAmmoCount } from './hud/ammo';
@@ -22,22 +22,26 @@ const tileSheet = new Image();
 tileSheet.src = tilesheetImg;
 tileSheet.onload = function() {
 
-  const tileEngine = createTileEngine(tileSheet);
+  const tileEngine = createTileEngine(tileSheet, canvas);
+  const worldWidth = tileEngine.tilewidth * tileEngine.width;
+  const worldHeight = tileEngine.tileheight * tileEngine.height;
+  const player = createPlayer(tileEngine, canvas);
   scene.add(player);
 
-  const wireframe = new Wireframe();
+  const wireframe = new Wireframe({ tileEngine: tileEngine });
   const light = new Light({
     context: context,
     entity: player,
-    wireframe: wireframe
+    wireframe: wireframe,
+    tileEngine: tileEngine
   });
 
   for (let i = 0; i < 4; i++) {
-    scene.add(createEnemy({ player: player, wireframe: wireframe }));
+    scene.add(createEnemy({ player: player, wireframe: wireframe, tileEngine: tileEngine }));
   }
 
   for (let i = 0; i < player.ammo; i++) {
-    scene.add(renderAmmoCount(10 * i + 20, 25));
+    scene.hudObjects.push(renderAmmoCount(10 * i + 20, 25));
   }
 
   const loop = GameLoop({
@@ -48,13 +52,27 @@ tileSheet.onload = function() {
           tileEngine.layerCollidesWith('collision', sprite);
         const hasCollidedWithWall =
           sprite.x < 0 ||
-          sprite.x + sprite.width > canvas.width ||
+          sprite.x + sprite.width > worldWidth ||
           sprite.y < 0 ||
-          sprite.y + sprite.height > canvas.height;
+          sprite.y + sprite.height > worldHeight;
 
         if (hasCollidedWithObstacle || hasCollidedWithWall) {
           sprite.handleCollision();
         }
+
+        /* Sync the scene camera with the tile engine camera. The tileEngine
+        coordinates are at the top left of the camera while the scene's are
+        in the middle, so we need an offset of canvas size divided by 2 when
+        syncing.
+
+        The tileEngine camera takes care of the offset for the tiles and the
+        scene camera takes care of the offset for the objects that have been
+        added to the scene. Anything not in these two objects needs to have the 
+        camera offset calculated manually in their update() methods, such as
+        the wireframe, light, los calculations, and pointer events.
+        */
+        scene.camera.x = tileEngine.sx + canvas.width / 2;
+        scene.camera.y = tileEngine.sy + canvas.height / 2;
 
         /* TODO: Optimize? We could track additional entity references to
          avoid duplicated entity checks. For example instead of check all
@@ -79,6 +97,7 @@ tileSheet.onload = function() {
           }
         }
       }
+      wireframe.update();
       light.update();
       if (!player.isAlive()) {
         endGame(loop);
@@ -92,6 +111,9 @@ tileSheet.onload = function() {
       tileEngine.render();
       light.render();
       scene.render();
+      for (const hudObj of scene.hudObjects) {
+        hudObj.render();
+      }
     }
   });
 

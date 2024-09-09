@@ -1,6 +1,6 @@
 const mapData = {
-  canvasWidth: 1280,
-  canvasHeight: 720,
+  canvasWidth: 640,
+  canvasHeight: 360,
 
   // tile size
   tilewidth: 32,

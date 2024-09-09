@@ -10,9 +10,10 @@ function createEnemy(config) {
     width: 16,
     color: 'red',
     hidden: true,
+    tileEngine: config.tileEngine,
     setRandomDirection() {
-      this.dx = Math.random() * 4 - 2;
-      this.dy = Math.random() * 4 - 2;
+      this.dx = Math.random() * 3 - 1.5;
+      this.dy = Math.random() * 3 - 1.5;
     },
     handleCollision() {
       this.x -= this.dx;
@@ -23,13 +24,15 @@ function createEnemy(config) {
       this.x += this.dx
       this.y += this.dy
       for (const line of config.wireframe.lines) {
+        // Subtracting the tile engine camera position from the player and enemy
+        // positions to account for the offset.
         const playerPos = {
-          x: config.player.x + config.player.width / 2,
-          y: config.player.y + config.player.height / 2
+          x: config.player.x + config.player.width / 2 - this.tileEngine.sx,
+          y: config.player.y + config.player.height / 2 - this.tileEngine.sy
         }
         const enemyPos = {
-          x: this.x + this.width / 2,
-          y: this.y + this.height / 2
+          x: this.x + this.width / 2 - this.tileEngine.sx,
+          y: this.y + this.height / 2 - this.tileEngine.sy
         }
         const playerToEnemy = [playerPos, enemyPos];
         

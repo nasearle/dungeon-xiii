@@ -8,11 +8,9 @@ function getViewportSize() {
 }
 
 function resize() {
-  const CANVAS_WIDTH = 1280;
-  const CANVAS_HEIGHT = 720;
   const { windowWidth, windowHeight } = getViewportSize();    
   const availableRatio = windowWidth / windowHeight;
-  const canvasRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
+  const canvasRatio = 1280 / 720;
   if (availableRatio <= canvasRatio) {
     canvas.style.width = `${windowWidth}px`;
     canvas.style.height = `${windowWidth / canvasRatio}px`;

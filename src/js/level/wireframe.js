@@ -2,13 +2,18 @@ import { mapData } from "./mapData";
 import { convertArrayToMatrix } from "../util/util";
 
 class Wireframe {
-  constructor() {
-    this.points = [
+  constructor(config) {
+    this.tileEngine = config.tileEngine;
+    const worldWidth = config.tileEngine.tilewidth * config.tileEngine.width;
+    const worldHeight = config.tileEngine.tileheight * config.tileEngine.height;
+    this.fixedPoints = [
       {x: 0, y: 0},
-      {x: mapData.canvasWidth, y: 0},
-      {x: 0, y: mapData.canvasHeight},
-      {x: mapData.canvasWidth, y: mapData.canvasHeight}
+      {x: worldWidth, y: 0},
+      {x: 0, y: worldHeight},
+      {x: worldWidth, y: worldHeight}
     ];
+    this.fixedLines = [];
+    this.points = [];
     this.lines = [];
 
     const layerData = this.getLayerData('collision');
@@ -21,13 +26,13 @@ class Wireframe {
   }
 
   addPoint(point) {
-    if (!this.points.includes(point)) {
-      this.points.push(point)
+    if (!this.fixedPoints.includes(point)) {
+      this.fixedPoints.push(point)
     }
   }
 
   addLine(line) {
-    this.lines.push(line);
+    this.fixedLines.push(line);
   }
 
   getBoxPoints(left, right, top, bottom) {
@@ -48,7 +53,7 @@ class Wireframe {
       [points.bottomRight, points.bottomLeft],
       [points.bottomLeft, points.topLeft]
     ]
-    this.lines.push(...lines);
+    this.fixedLines.push(...lines);
 
     for (const point in points) {
       this.addPoint(points[point]);
@@ -144,6 +149,28 @@ class Wireframe {
     }
     return lines;
   }
+
+  update() {
+    // Update the points and lines with the tile engine camera offset.
+    this.points = this.fixedPoints.map((fixedPoint) => {
+      return {
+        x: fixedPoint.x - this.tileEngine.sx,
+        y: fixedPoint.y - this.tileEngine.sy
+      }
+    });
+    
+    this.lines = this.fixedLines.map((fixedLine) => {
+      const line = [];
+      for (const endpoint of fixedLine) {
+        line.push({
+          x: endpoint.x - this.tileEngine.sx,
+          y: endpoint.y - this.tileEngine.sy
+        })
+      }
+      return line;
+    });
+  }
+
   // For debugging:
   // drawLine(line) {
   //   ctx.beginPath();
@@ -154,10 +181,10 @@ class Wireframe {
   // }
 
   // render() {
-  //   for (const line of wireframe.lines) {
+  //   for (const line of this.lines) {
   //     this.drawLine(line)
   //   }
-  //   for (const point of wireframe.points) {
+  //   for (const point of this.points) {
   //     ctx.beginPath();
   //     ctx.fillStyle = this.color;
   //     ctx.rect(point.x, point.y, 5, 5);
