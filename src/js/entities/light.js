@@ -7,8 +7,10 @@ class Light {
     this.wireframe = config.wireframe;
     this.sourceColor = 'rgba(255, 255, 255, 0.2)';
     this.distanceColor = 'rgba(255, 255, 255, 0)';
-    this.minFalloff = 100;
-    this.maxFalloff = 300;
+    this.minShadowColor = 'rgba(0, 0, 0, 0)';
+    this.maxShadowColor = 'rgba(0, 0, 0, 0.85)';
+    this.minFalloff = 50;
+    this.maxFalloff = 275;
     this.origin = {
       x: this.parent.x + this.parent.width / 2,
       y: this.parent.y + this.parent.height / 2
@@ -92,6 +94,7 @@ class Light {
 
     return gradient;
   }
+
   /*
   If performance becomes an issue we could use something like this to reduce the
   number of rays.
@@ -118,6 +121,24 @@ class Light {
     this.ctx.fill();
   }
 
+  shadowGradient() {
+    const x = this.origin.x,
+          y = this.origin.y,
+          inner = this.minFalloff,
+          outer = this.maxFalloff + 400;
+
+    const gradient = this.ctx.createRadialGradient(x, y, inner, x, y, outer);
+    gradient.addColorStop(0, this.minShadowColor);
+    gradient.addColorStop(1, this.maxShadowColor);
+
+    return gradient;
+  }
+
+  drawShadow() {
+    this.ctx.fillStyle = this.shadowGradient();
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  }
+
   update() {
     this.origin = {
       x: this.parent.x + this.parent.width / 2,
@@ -130,6 +151,7 @@ class Light {
   }
 
   render() {
+    this.drawShadow();
     this.drawPolygon(this.rayEndpoints);
   }
 }

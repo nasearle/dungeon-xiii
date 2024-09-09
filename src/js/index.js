@@ -90,8 +90,8 @@ tileSheet.onload = function() {
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       tileEngine.render();
-      scene.render();
       light.render();
+      scene.render();
     }
   });
 
