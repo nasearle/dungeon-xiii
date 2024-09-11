@@ -5,8 +5,8 @@ function renderAmmoCount(x, y) {
     type: 'ammo',
     x: x,
     y: y,
-    width: 5,
-    height: 10,
+    width: 3,
+    height: 5,
     color: 'yellow',
     render() {
       this.context.fillStyle = this.color;

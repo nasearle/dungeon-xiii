@@ -4,10 +4,10 @@ import { intersect } from '../util/util';
 function createEnemy(config) {
   const enemy = Sprite({
     type: 'enemy',
-    x: 300,
-    y: 400,
-    height: 16,
-    width: 16,
+    x: config.spawn.x,
+    y: config.spawn.y,
+    height: 10,
+    width: 10,
     color: 'red',
     hidden: true,
     tileEngine: config.tileEngine,

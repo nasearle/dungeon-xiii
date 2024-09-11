@@ -14,14 +14,14 @@ function createPlayer(tileEngine, canvas) {
 
   const player = Sprite({
     type: 'player',
-    x: 10,
-    y: 10,
+    x: 20,
+    y: worldHeight - 40,
     dx: 0,
     dy: 0,
-    height: 16,
-    width: 16,
+    height: 8,
+    width: 8,
     color: 'white',
-    maxSpeed: 2,
+    maxSpeed: 1,
     ammo: 13,
     ableToShoot: true,
     // Defines the minimum distance between the player and the canvas edge

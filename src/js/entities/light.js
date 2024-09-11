@@ -6,7 +6,7 @@ class Light {
     this.parent = config.entity;
     this.wireframe = config.wireframe;
     this.tileEngine = config.tileEngine;
-    this.sourceColor = 'rgba(255, 255, 255, 0.2)';
+    this.sourceColor = 'rgba(255, 255, 255, 0.1)';
     this.distanceColor = 'rgba(255, 255, 255, 0)';
     this.minShadowColor = 'rgba(0, 0, 0, 0)';
     this.maxShadowColor = 'rgba(0, 0, 0, 0.85)';

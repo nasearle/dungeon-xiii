@@ -16,7 +16,7 @@ class Wireframe {
     this.points = [];
     this.lines = [];
 
-    const layerData = this.getLayerData('collision');
+    const layerData = this.getLayerData('light');
     this.getHorizontalsFromLayer(layerData);
     this.getVerticalsFromLayer(layerData);
   }

@@ -6,9 +6,10 @@ import { createPlayer } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
 import { renderAmmoCount } from './hud/ammo';
-import tilesheetImg from '../img/tilesheet.png';
+import tilesheetImg from '../img/map.png';
 import { Wireframe } from './level/wireframe';
 import { Light } from './entities/light';
+import { mapData } from './level/mapData';
 
 const { canvas, context } = init();
 initResizer();
@@ -36,12 +37,12 @@ tileSheet.onload = function() {
     tileEngine: tileEngine
   });
 
-  for (let i = 0; i < 4; i++) {
-    scene.add(createEnemy({ player: player, wireframe: wireframe, tileEngine: tileEngine }));
+  for (const enemy of mapData.enemies) {
+    scene.add(createEnemy({ spawn: enemy, player: player, wireframe: wireframe, tileEngine: tileEngine }));
   }
 
   for (let i = 0; i < player.ammo; i++) {
-    scene.hudObjects.push(renderAmmoCount(10 * i + 20, 25));
+    scene.hudObjects.push(renderAmmoCount(7 * i + 10, 10));
   }
 
   const loop = GameLoop({
@@ -104,13 +105,14 @@ tileSheet.onload = function() {
       }
     },
     render() {
-      // TODO: temp background color, maybe replace with tile system eventually
-      context.fillStyle = '#18181a';
+      context.fillStyle = '#141412';
       context.fillRect(0, 0, canvas.width, canvas.height);
 
-      tileEngine.render();
+      tileEngine.renderLayer('ground');
+      tileEngine.renderLayer('collision');
       light.render();
       scene.render();
+      tileEngine.renderLayer('foreground');
       for (const hudObj of scene.hudObjects) {
         hudObj.render();
       }
