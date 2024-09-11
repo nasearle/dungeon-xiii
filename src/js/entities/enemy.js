@@ -1,16 +1,35 @@
-import { Sprite } from 'kontra';
-import { intersect } from '../util/util';
+import { Sprite, SpriteSheet } from 'kontra';
+import { intersect, loadImage } from '../util/util';
+import enemyImg from '../../img/enemy.png';
 
-function createEnemy(config) {
+async function createEnemy(config) {
+  const enemySheet = await loadImage(enemyImg);
+
+  const spriteSheet = SpriteSheet({
+    image: enemySheet,
+    frameWidth: 32,
+    frameHeight: 32,
+    animations: {
+      idle: {
+        frames: '0..3',
+        frameRate: 4
+      },
+      run: {
+        frames: '4..9',
+        frameRate: 4
+      }
+    }
+  });
+
   const enemy = Sprite({
     type: 'enemy',
     x: config.spawn.x,
     y: config.spawn.y,
-    height: 10,
-    width: 10,
-    color: 'red',
+    height: 32,
+    width: 32,
     hidden: true,
     tileEngine: config.tileEngine,
+    animations: spriteSheet.animations,
     setRandomDirection() {
       this.dx = Math.random() * 3 - 1.5;
       this.dy = Math.random() * 3 - 1.5;
@@ -21,8 +40,18 @@ function createEnemy(config) {
       this.setRandomDirection();
     },
     update() {
-      this.x += this.dx
-      this.y += this.dy
+      if (this.dx || this.dy) {
+        if (this.currentAnimation != 'run') {
+          this.playAnimation('run');
+        }
+      } else {
+        if (this.currentAnimation != 'idle') {
+          this.playAnimation('idle');
+        }
+      }
+      this.advance();
+
+      // Check LOS with player
       for (const line of config.wireframe.lines) {
         // Subtracting the tile engine camera position from the player and enemy
         // positions to account for the offset.
@@ -43,15 +72,24 @@ function createEnemy(config) {
           this.hidden = false;
         }
       }
+      this.collisionBox.x = this.x + 4;
+      this.collisionBox.y = this.y + 16;
     },
     render() {
       if (!this.hidden) {
-        this.context.fillStyle = this.color;
-        this.context.fillRect(0, 0, this.width, this.height);
+        this.draw();
       }      
     }
   });
   enemy.setRandomDirection();
+
+  enemy.collisionBox = {
+    x: config.spawn.x + 4,
+    y: config.spawn.y + 16,
+    width: 24,
+    height: 16
+  };
+
   return enemy;
 }
 

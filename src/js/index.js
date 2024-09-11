@@ -6,10 +6,10 @@ import { createPlayer } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
 import { renderAmmoCount } from './hud/ammo';
-import tilesheetImg from '../img/map.png';
 import { Wireframe } from './level/wireframe';
 import { Light } from './entities/light';
 import { mapData } from './level/mapData';
+import tilesheetImg from '../img/map.png';
 
 const { canvas, context } = init();
 initResizer();
@@ -21,12 +21,13 @@ initPointer();
 // how to get it to work with Webpack.
 const tileSheet = new Image();
 tileSheet.src = tilesheetImg;
-tileSheet.onload = function() {
-
+tileSheet.onload = async function() {
   const tileEngine = createTileEngine(tileSheet, canvas);
+  scene.camera.x = tileEngine.sx + canvas.width / 2;
+  scene.camera.y = tileEngine.sy + canvas.height / 2;
   const worldWidth = tileEngine.tilewidth * tileEngine.width;
   const worldHeight = tileEngine.tileheight * tileEngine.height;
-  const player = createPlayer(tileEngine, canvas);
+  const player = await createPlayer(tileEngine, canvas);
   scene.add(player);
 
   const wireframe = new Wireframe({ tileEngine: tileEngine });
@@ -38,7 +39,12 @@ tileSheet.onload = function() {
   });
 
   for (const enemy of mapData.enemies) {
-    scene.add(createEnemy({ spawn: enemy, player: player, wireframe: wireframe, tileEngine: tileEngine }));
+    scene.add(await createEnemy({
+      spawn: enemy,
+      player: player,
+      wireframe: wireframe,
+      tileEngine: tileEngine
+    }));
   }
 
   for (let i = 0; i < player.ammo; i++) {
@@ -49,8 +55,13 @@ tileSheet.onload = function() {
     update() {
       scene.customUpdate();
       for (const sprite of scene.objects) {
-        const hasCollidedWithObstacle =
-          tileEngine.layerCollidesWith('collision', sprite);
+        let hasCollidedWithObstacle;
+        if (sprite.collisionBox) {
+          hasCollidedWithObstacle = tileEngine.layerCollidesWith('collision', sprite.collisionBox);
+        } else {
+          hasCollidedWithObstacle = tileEngine.layerCollidesWith('collision', sprite);
+        }
+          
         const hasCollidedWithWall =
           sprite.x < 0 ||
           sprite.x + sprite.width > worldWidth ||

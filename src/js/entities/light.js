@@ -14,7 +14,7 @@ class Light {
     this.maxFalloff = this.ctx.canvas.width * 0.3;
     this.origin = {
       x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
-      y: this.parent.y + this.parent.height / 2 - this.tileEngine.sy
+      y: this.parent.y + this.parent.height - this.tileEngine.sy
     };
     this.rayEndpoints = [];
   }
@@ -144,7 +144,7 @@ class Light {
     // Subtract tileEngine sx and sy to account for the camera offset.
     this.origin = {
       x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
-      y: this.parent.y + this.parent.height / 2 - this.tileEngine.sy
+      y: this.parent.y + this.parent.height - this.tileEngine.sy
     };
     this.rayEndpoints = [];
     this.createRays();

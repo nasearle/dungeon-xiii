@@ -1,26 +1,45 @@
 import {
   Sprite,
+  SpriteSheet,
   keyPressed,
   pointerPressed,
   getPointer,
   onPointer } from 'kontra';
-import { angleToTarget, removeFromArray } from '../util/util';
+import { angleToTarget, removeFromArray, loadImage } from '../util/util';
 import { createBullet } from './bullet';
 import { scene } from '../scene';
+import playerImg from '../../img/player.png';
 
-function createPlayer(tileEngine, canvas) {
+async function createPlayer(tileEngine, canvas) {
   const worldWidth = tileEngine.tilewidth * tileEngine.width;
   const worldHeight = tileEngine.tileheight * tileEngine.height;
 
+  const playerSheet = await loadImage(playerImg);
+
+  const spriteSheet = SpriteSheet({
+    image: playerSheet,
+    frameWidth: 32,
+    frameHeight: 32,
+    animations: {
+      idle: {
+        frames: '0..3',
+        frameRate: 4
+      },
+      run: {
+        frames: '4..9',
+        frameRate: 4
+      }
+    }
+  });
+
   const player = Sprite({
     type: 'player',
-    x: 20,
-    y: worldHeight - 40,
+    x: 60,
+    y: worldHeight - 80,
     dx: 0,
     dy: 0,
-    height: 8,
-    width: 8,
-    color: 'white',
+    height: 32,
+    width: 32,
     maxSpeed: 1,
     ammo: 13,
     ableToShoot: true,
@@ -32,6 +51,7 @@ function createPlayer(tileEngine, canvas) {
       dx: 0,
       dy: 0
     },
+    animations: spriteSheet.animations,
     handleCollision() {
       this.x -= this.dx;
       this.y -= this.dy;
@@ -66,6 +86,20 @@ function createPlayer(tileEngine, canvas) {
             4
           )
         );
+      }
+
+      if (keyPressed('a') ||
+          keyPressed('d') ||
+          keyPressed('s') ||
+          keyPressed('w'))
+      {
+        if (this.currentAnimation != 'run') {
+          this.playAnimation('run');
+        }
+      } else {
+        if (this.currentAnimation != 'idle') {
+          this.playAnimation('idle');
+        }
       }
 
       const xCameraDeadzone = canvas.width * this.cameraDeadzone;
@@ -133,12 +167,22 @@ function createPlayer(tileEngine, canvas) {
       }
         
       this.advance();
+      this.collisionBox.x = this.x + 4;
+      this.collisionBox.y = this.y + 16;
     }
   });
   
   onPointer('up', function() {
     player.ableToShoot = true;
   });
+
+  player.collisionBox = {
+    x: player.x + 4,
+    y: player.y + 16,
+    width: 24,
+    height: 16
+  };
+
   return player;
 }
 

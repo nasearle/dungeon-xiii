@@ -10,7 +10,7 @@ const mapData = {
   width: 30,
   height: 30,
 
-  enemies: [{x: 64, y: 96}, {x: 400, y: 96}, {x: 160, y: 272 }, {x: 416, y: 336 }],
+  enemies: [{x: 48, y: 80}, {x: 400, y: 96}, {x: 160, y: 272 }, {x: 416, y: 336 }],
 
   // layer object
   layers: [{
