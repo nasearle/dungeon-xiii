@@ -1,7 +1,7 @@
 import { init, GameLoop, initKeys, initPointer, collides } from 'kontra';
 import { initResizer, resize } from './util/resizer';
 import { scene } from './scene';
-import { initMenu, endGame, startGame } from './menu';
+import { initMenu, endGame, startGame, gameWin } from './menu';
 import { createPlayer } from './entities/player';
 import { createEnemy } from './entities/enemy';
 import { createTileEngine } from './level/tiles';
@@ -55,6 +55,12 @@ tileSheet.onload = async function() {
     update() {
       scene.customUpdate();
       for (const sprite of scene.objects) {
+        if (sprite.type == 'player') {
+          if (tileEngine.layerCollidesWith('stairs', sprite)) {
+            gameWin(loop);
+          }
+        }
+        
         let hasCollidedWithObstacle;
         if (sprite.collisionBox) {
           hasCollidedWithObstacle = tileEngine.layerCollidesWith('collision', sprite.collisionBox);

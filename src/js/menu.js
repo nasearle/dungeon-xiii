@@ -23,4 +23,12 @@ const endGame = function(gameLoop) {
   gameUi.classList.add('hidden');
 }
 
-export { initMenu, endGame, startGame };
+const gameWin = function(gameLoop) {
+  gameLoop.stop();
+  const gameWinScreen = document.querySelector('#gameWinScreen');
+  const gameUi = document.querySelector('#gameUi');
+  gameWinScreen.classList.remove('hidden');
+  gameUi.classList.add('hidden');
+}
+
+export { initMenu, endGame, startGame, gameWin };
