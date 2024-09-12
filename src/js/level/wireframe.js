@@ -1,8 +1,8 @@
-import { mapData } from "./mapData";
 import { convertArrayToMatrix } from "../util/util";
 
 class Wireframe {
   constructor(config) {
+    this.mapData = config.levelData;
     this.tileEngine = config.tileEngine;
     const worldWidth = config.tileEngine.tilewidth * config.tileEngine.width;
     const worldHeight = config.tileEngine.tileheight * config.tileEngine.height;
@@ -22,7 +22,7 @@ class Wireframe {
   }
 
   getLayerData(layerName) {
-    return mapData.layers.filter((elem) => elem.name == layerName)[0].data;
+    return this.mapData.layers.filter((elem) => elem.name == layerName)[0].data;
   }
 
   addPoint(point) {
@@ -74,20 +74,20 @@ class Wireframe {
     let right = undefined;
 
     layerData.forEach((elem, index) => {
-      const row = Math.floor(index / mapData.width);
-      const column = index % mapData.width;      
+      const row = Math.floor(index / this.mapData.width);
+      const column = index % this.mapData.width;      
       if (elem != 0 &&
         left == undefined &&
-        !layerData[index + mapData.width] &&
-        !layerData[index - mapData.width]) {
-        left = column * mapData.tilewidth;
+        !layerData[index + this.mapData.width] &&
+        !layerData[index - this.mapData.width]) {
+        left = column * this.mapData.tilewidth;
       }
       // If there are tiles above and below, add intersection points.
-      if (left != undefined && (layerData[index + mapData.width] || layerData[index - mapData.width])) {
-        const left = column * mapData.tilewidth,
-              right = left + mapData.tilewidth,
-              top = row * mapData.tileheight,
-              bottom = top + mapData.tileheight;
+      if (left != undefined && (layerData[index + this.mapData.width] || layerData[index - this.mapData.width])) {
+        const left = column * this.mapData.tilewidth,
+              right = left + this.mapData.tilewidth,
+              top = row * this.mapData.tileheight,
+              bottom = top + this.mapData.tileheight;
 
         const points = this.getBoxPoints(left, right, top, bottom);
 
@@ -95,11 +95,11 @@ class Wireframe {
           this.addPoint(points[point]);
         }
       }
-      if (left != undefined && (layerData[index + 1] == 0 || (index + 1) % mapData.width == 0)) {
-        right = column * mapData.tilewidth + mapData.tilewidth;
+      if (left != undefined && (layerData[index + 1] == 0 || (index + 1) % this.mapData.width == 0)) {
+        right = column * this.mapData.tilewidth + this.mapData.tilewidth;
 
-        const top = row * mapData.tileheight,
-              bottom = top + mapData.tileheight;
+        const top = row * this.mapData.tileheight,
+              bottom = top + this.mapData.tileheight;
 
         this.addBox(left, right, top, bottom);
 
@@ -118,14 +118,14 @@ class Wireframe {
     let top = undefined;
     let bottom = undefined;
 
-    const layerMatrix = convertArrayToMatrix(layerData, mapData.width, mapData.height);
+    const layerMatrix = convertArrayToMatrix(layerData, this.mapData.width, this.mapData.height);
 
     let row = 0;
     let column = 0;
     let flag = false;
 
     for (let k = 0; k < layerData.length; k++) {
-      row = k % mapData.height;
+      row = k % this.mapData.height;
       if (row == 0 && flag == true) {
         column++;
       }
@@ -133,13 +133,13 @@ class Wireframe {
       const elem = layerMatrix[row][column];
 
       if (elem != 0 && top == undefined && !(!layerMatrix[row + 1] || layerMatrix[row + 1][column] == 0)) {
-        top = row * mapData.tileheight;
+        top = row * this.mapData.tileheight;
       }
       if (top != undefined && (!layerMatrix[row + 1] || layerMatrix[row + 1][column] == 0)) {
-        bottom = row * mapData.tileheight + mapData.tileheight;
+        bottom = row * this.mapData.tileheight + this.mapData.tileheight;
 
-        const left = column * mapData.tilewidth,
-              right = left + mapData.tilewidth;
+        const left = column * this.mapData.tilewidth,
+              right = left + this.mapData.tilewidth;
 
         this.addBox(left, right, top, bottom);
 

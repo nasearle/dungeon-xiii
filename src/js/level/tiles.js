@@ -1,7 +1,6 @@
 import { TileEngine } from 'kontra';
-import { mapData } from './mapData';
 
-function createTileEngine(tileSheet) {
+function createTileEngine(tileSheet, mapData) {
   return TileEngine({
     ...mapData,
     sx: 0,

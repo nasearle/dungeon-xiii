@@ -5,16 +5,12 @@ import {
   pointerPressed,
   getPointer,
   onPointer } from 'kontra';
-import { removeFromArray, loadImage, angleToTarget } from '../util/util';
+import { removeFromArray, angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
-import { scene } from '../scene';
-import playerImg from '../../img/player.png';
 
-async function createPlayer(tileEngine, canvas) {
+function createPlayer(scene, tileEngine, canvas, playerSheet) {
   const worldWidth = tileEngine.tilewidth * tileEngine.width;
   const worldHeight = tileEngine.tileheight * tileEngine.height;
-
-  const playerSheet = await loadImage(playerImg);
 
   const spriteSheet = SpriteSheet({
     image: playerSheet,

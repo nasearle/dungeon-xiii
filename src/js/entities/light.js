@@ -11,7 +11,7 @@ class Light {
     this.minShadowColor = 'rgba(0, 0, 0, 0)';
     this.maxShadowColor = 'rgba(0, 0, 0, 0.85)';
     this.minFalloff = this.ctx.canvas.width * 0.04;
-    this.maxFalloff = this.ctx.canvas.width * 0.3;
+    this.maxFalloff = this.ctx.canvas.width * 0.33;
     this.origin = {
       x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
       y: this.parent.y + this.parent.height - 15 - this.tileEngine.sy

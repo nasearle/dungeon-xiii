@@ -65,21 +65,10 @@ function intersect(line1, line2) {
 	return {x, y, dist}
 }
 
-function loadImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.src = url;
-    img.onload = function() {
-      resolve(this);
-    }
-  })
-}
-
 export {
   angleToTarget,
   intersect,
   convertArrayToMatrix,
   distanceToTarget,
-  removeFromArray,
-  loadImage
+  removeFromArray
 };

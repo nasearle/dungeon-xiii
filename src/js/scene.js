@@ -1,17 +1,20 @@
 import { Scene } from 'kontra';
 
-const scene = Scene({
-  id: 'game',
-  objects: [],
-  hudObjects: [],
-  removeDeadObjects() {
-    const deadObjects = scene.objects.filter(obj => !obj.isAlive());
-    this.remove(deadObjects)
-  },
-  customUpdate() {
-    this.removeDeadObjects();
-    this.update();
-  }
-});
+function createScene(id) {
+  return Scene({
+    id: id,
+    objects: [],
+    hudObjects: [],
+    removeDeadObjects() {
+      const deadObjects = this.objects.filter(obj => !obj.isAlive());
+      this.remove(deadObjects)
+    },
+    customUpdate() {
+      this.removeDeadObjects();
+      this.update();
+    }
+  });
+}
 
-export { scene };
+
+export { createScene };

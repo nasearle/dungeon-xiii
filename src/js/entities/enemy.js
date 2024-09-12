@@ -1,12 +1,9 @@
 import { angleToTarget, Sprite, SpriteSheet } from 'kontra';
-import { intersect, loadImage, distanceToTarget } from '../util/util';
-import enemyImg from '../../img/enemy.png';
+import { intersect, distanceToTarget } from '../util/util';
 
-async function createEnemy(config) {
-  const enemySheet = await loadImage(enemyImg);
-
+function createEnemy(config) {
   const spriteSheet = SpriteSheet({
-    image: enemySheet,
+    image: config.enemySheet,
     frameWidth: 32,
     frameHeight: 32,
     animations: {

@@ -23,8 +23,7 @@ const endGame = function(gameLoop) {
   gameUi.classList.add('hidden');
 }
 
-const gameWin = function(gameLoop) {
-  gameLoop.stop();
+const gameWin = function() {
   const gameWinScreen = document.querySelector('#gameWinScreen');
   const gameUi = document.querySelector('#gameUi');
   gameWinScreen.classList.remove('hidden');
