@@ -1,4 +1,4 @@
-import { radAngleToTarget, intersect, distanceToTarget } from "../util/util";
+import { angleToTarget, intersect, distanceToTarget } from "../util/util";
 
 class Light {
   constructor(config) {
@@ -14,7 +14,7 @@ class Light {
     this.maxFalloff = this.ctx.canvas.width * 0.3;
     this.origin = {
       x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
-      y: this.parent.y + this.parent.height - this.tileEngine.sy
+      y: this.parent.y + this.parent.height - 15 - this.tileEngine.sy
     };
     this.rayEndpoints = [];
   }
@@ -45,7 +45,7 @@ class Light {
     // ray that points to it and two rays very close on either side (so the
     // light can continue beyond the corner). 
     for (const point of this.wireframe.points) {
-      const angle = radAngleToTarget(this.origin, point);
+      const angle = angleToTarget(this.origin, point);
       let adjRays = this.getAdjacentRays(angle);
 
       // Array of three rays, original and two adjacent.
@@ -144,7 +144,7 @@ class Light {
     // Subtract tileEngine sx and sy to account for the camera offset.
     this.origin = {
       x: this.parent.x + this.parent.width / 2 - this.tileEngine.sx,
-      y: this.parent.y + this.parent.height - this.tileEngine.sy
+      y: this.parent.y + this.parent.height - 15 - this.tileEngine.sy
     };
     this.rayEndpoints = [];
     this.createRays();

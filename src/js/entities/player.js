@@ -5,7 +5,7 @@ import {
   pointerPressed,
   getPointer,
   onPointer } from 'kontra';
-import { angleToTarget, removeFromArray, loadImage } from '../util/util';
+import { removeFromArray, loadImage, angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
 import { scene } from '../scene';
 import playerImg from '../../img/player.png';

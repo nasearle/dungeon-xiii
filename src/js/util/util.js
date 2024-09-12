@@ -1,8 +1,4 @@
-function angleToTarget(start, target,) {
-  return (Math.atan2(target.y - start.y, target.x - start.x) / Math.PI) * 180;
-}
-
-function radAngleToTarget(start, target) {
+function angleToTarget(start, target) {
   return Math.atan2(target.y - start.y, target.x - start.x);
 }
 
@@ -81,7 +77,6 @@ function loadImage(url) {
 
 export {
   angleToTarget,
-  radAngleToTarget,
   intersect,
   convertArrayToMatrix,
   distanceToTarget,
