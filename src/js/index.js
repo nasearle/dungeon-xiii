@@ -19,7 +19,7 @@ window.onload = async () => {
       game.scene.customUpdate(dt);
       for (const sprite of game.scene.objects) {
         if (sprite.type == 'player') {
-          if (game.tileEngine.layerCollidesWith('stairs', sprite)) {
+          if (collides(sprite.collisionBox, game.levelData.stairs)) {
             game.nextLevel(loop);
           }
         }

@@ -1,9 +1,21 @@
 {
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "size": "for %I in (public.zip) do @echo %~zI",
+    "prod": "npm run build && gulp build && npm run size"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
+    "del": "^5.0.0",
+    "google-closure-compiler": "^20240317.0.0",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-cli": "^3.0.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-include": "^2.4.1",
+    "gulp-uglify": "^3.0.2",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-zip": "^5.0.0",
     "html-webpack-plugin": "^5.6.0",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"

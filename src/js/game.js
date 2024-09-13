@@ -31,6 +31,7 @@ class Game {
   initLevel() {
     const scene = createScene(`level${this.currentLevel}`);
     const levelData = levels[this.currentLevel];
+    this.levelData = levelData;
     
     const tileEngine = createTileEngine(this.tilesheetImg, levelData);
     this.syncCameras(scene, tileEngine);

@@ -19,4 +19,4 @@ Tip: Use `debug=true` query parameter to skip the landing page menu. For example
 
 Attribution
 
-* Assets courtesy of [Kenney](https://kenney.nl/assets)
+* Assets courtesy of [Anokolisa](https://anokolisa.itch.io/)
