@@ -16,6 +16,7 @@ class Game {
     this.tilesheetImg = images.tilesheetImg;
     this.playerImg = images.playerImg;
     this.enemyImg = images.enemyImg;
+    this.playerAmmo = 13;
     this.currentLevel = 0;
 
     this.initLevel();
@@ -33,7 +34,7 @@ class Game {
     const tileEngine = createTileEngine(this.tilesheetImg, levelData);
     this.syncCameras(scene, tileEngine);
 
-    const player = createPlayer(scene, tileEngine, this.canvas, this.playerImg, levelData.player);
+    const player = createPlayer(scene, tileEngine, this.canvas, this.playerImg, levelData.player, this.playerAmmo);
     scene.add(player);
 
     const wireframe = new Wireframe({ tileEngine, levelData });
@@ -67,6 +68,7 @@ class Game {
 
   nextLevel(gameLoop) {
     gameLoop.stop();
+    this.playerAmmo = this.player.ammo;
     this.currentLevel += 1;
     this.scene.destroy();
     if (levels[this.currentLevel]) {

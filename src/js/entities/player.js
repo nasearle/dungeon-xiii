@@ -8,7 +8,7 @@ import {
 import { removeFromArray, angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
 
-function createPlayer(scene, tileEngine, canvas, playerSheet, playerLoc) {
+function createPlayer(scene, tileEngine, canvas, playerSheet, playerLoc, ammo) {
   const worldWidth = tileEngine.tilewidth * tileEngine.width;
   const worldHeight = tileEngine.tileheight * tileEngine.height;
 
@@ -37,7 +37,7 @@ function createPlayer(scene, tileEngine, canvas, playerSheet, playerLoc) {
     height: 32,
     width: 32,
     maxSpeed: 1,
-    ammo: 13,
+    ammo: ammo,
     ableToShoot: true,
     // Defines the minimum distance between the player and the canvas edge
     // required to move the camera, as a percentage of canvas size. Closer to 1
