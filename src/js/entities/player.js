@@ -8,7 +8,7 @@ import {
 import { removeFromArray, angleToTarget } from '../util/util';
 import { createBullet } from './bullet';
 
-function createPlayer(scene, tileEngine, canvas, playerSheet) {
+function createPlayer(scene, tileEngine, canvas, playerSheet, playerLoc) {
   const worldWidth = tileEngine.tilewidth * tileEngine.width;
   const worldHeight = tileEngine.tileheight * tileEngine.height;
 
@@ -30,8 +30,8 @@ function createPlayer(scene, tileEngine, canvas, playerSheet) {
 
   const player = Sprite({
     type: 'player',
-    x: 60,
-    y: worldHeight - 80,
+    x: playerLoc.x,
+    y: playerLoc.y,
     dx: 0,
     dy: 0,
     height: 32,

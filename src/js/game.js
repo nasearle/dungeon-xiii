@@ -33,7 +33,7 @@ class Game {
     const tileEngine = createTileEngine(this.tilesheetImg, levelData);
     this.syncCameras(scene, tileEngine);
 
-    const player = createPlayer(scene, tileEngine, this.canvas, this.playerImg);
+    const player = createPlayer(scene, tileEngine, this.canvas, this.playerImg, levelData.player);
     scene.add(player);
 
     const wireframe = new Wireframe({ tileEngine, levelData });
