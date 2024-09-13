@@ -1,4 +1,4 @@
-import { angleToTarget, intersect, distanceToTarget } from "../util/util";
+import { angleToTarget, intersect } from "../util/util";
 
 class Light {
   constructor(config) {

@@ -4,6 +4,7 @@ import { Wireframe } from './level/wireframe';
 import { Light } from './entities/light';
 import { createPlayer } from './entities/player';
 import { createEnemy } from './entities/enemy';
+import { createTrap } from './entities/trap';
 import { renderAmmoCount } from './hud/ammo';
 import { levels } from './level/levels';
 import { gameWin } from './menu';
@@ -33,6 +34,14 @@ class Game {
     
     const tileEngine = createTileEngine(this.tilesheetImg, levelData);
     this.syncCameras(scene, tileEngine);
+
+    for (const trap of levelData.traps) {
+      scene.add(createTrap({
+        x: trap.x,
+        y: trap.y,
+        tileSheet: this.tilesheetImg
+      }));
+    }
 
     const player = createPlayer(scene, tileEngine, this.canvas, this.playerImg, levelData.player, this.playerAmmo);
     scene.add(player);

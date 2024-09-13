@@ -15,8 +15,8 @@ window.onload = async () => {
   const game = new Game(canvas, context, images);
 
   const loop = GameLoop({
-    async update() {
-      game.scene.customUpdate();
+    async update(dt) {
+      game.scene.customUpdate(dt);
       for (const sprite of game.scene.objects) {
         if (sprite.type == 'player') {
           if (game.tileEngine.layerCollidesWith('stairs', sprite)) {
@@ -24,15 +24,17 @@ window.onload = async () => {
           }
         }
         
-        let hasCollidedWithObstacle;
-        if (sprite.collisionBox) {
-          hasCollidedWithObstacle = game.tileEngine.layerCollidesWith('collision', sprite.collisionBox);
-        } else {
-          hasCollidedWithObstacle = game.tileEngine.layerCollidesWith('collision', sprite);
-        }
-  
-        if (hasCollidedWithObstacle) {
-          sprite.handleCollision();
+        if (sprite.type == 'player' || sprite.type == 'enemy') {
+          let hasCollidedWithObstacle;
+          if (sprite.collisionBox) {
+            hasCollidedWithObstacle = game.tileEngine.layerCollidesWith('collision', sprite.collisionBox);
+          } else {
+            hasCollidedWithObstacle = game.tileEngine.layerCollidesWith('collision', sprite);
+          }
+    
+          if (hasCollidedWithObstacle) {
+            sprite.handleCollision();
+          }
         }
   
         /* Sync the scene camera with the tile engine camera. The tileEngine
@@ -48,6 +50,12 @@ window.onload = async () => {
         */
         game.scene.camera.x = game.tileEngine.sx + canvas.width / 2;
         game.scene.camera.y = game.tileEngine.sy + canvas.height / 2;
+
+        if (sprite.type == 'trap' && sprite.state == 'triggered') {
+          if (collides(game.player.collisionBox, sprite.collisionBox)) {
+            game.player.ttl = 0;
+          }
+        }
   
         /* TODO: Optimize? We could track additional entity references to
           avoid duplicated entity checks. For example instead of check all
@@ -84,8 +92,8 @@ window.onload = async () => {
   
       game.tileEngine.renderLayer('ground');
       game.tileEngine.renderLayer('collision');
-      game.light.render();
       game.scene.render();
+      game.light.render();
       game.tileEngine.renderLayer('foreground');
       for (const hudObj of game.scene.hudObjects) {
         hudObj.render();

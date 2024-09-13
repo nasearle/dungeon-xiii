@@ -67,6 +67,7 @@ function createPlayer(scene, tileEngine, canvas, playerSheet, playerLoc, ammo) {
         this.ammo -= 1;
         this.ableToShoot = false;
         const pointer = getPointer();
+        
         // Account for camera offset.
         pointer.x += tileEngine.sx;
         pointer.y += tileEngine.sy;

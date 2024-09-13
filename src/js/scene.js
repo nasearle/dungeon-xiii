@@ -9,9 +9,9 @@ function createScene(id) {
       const deadObjects = this.objects.filter(obj => !obj.isAlive());
       this.remove(deadObjects)
     },
-    customUpdate() {
+    customUpdate(dt) {
       this.removeDeadObjects();
-      this.update();
+      this.update(dt);
     }
   });
 }

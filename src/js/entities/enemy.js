@@ -1,5 +1,5 @@
-import { angleToTarget, Sprite, SpriteSheet } from 'kontra';
-import { intersect, distanceToTarget } from '../util/util';
+import { Sprite, SpriteSheet } from 'kontra';
+import { intersect, angleToTarget, distanceToTarget } from '../util/util';
 
 function createEnemy(config) {
   const spriteSheet = SpriteSheet({

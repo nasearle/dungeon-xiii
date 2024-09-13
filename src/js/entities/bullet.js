@@ -16,6 +16,9 @@ function createBullet(x, y, angle, width, height) {
     handleCollision() {
       //TODO: Add an animation.
       this.ttl = 0;
+    },
+    update() {
+      this.advance();
     }
   });
 }
