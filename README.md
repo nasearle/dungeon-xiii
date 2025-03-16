@@ -2,6 +2,8 @@
 
 A web game created for the 2024 [js13k game development competition](https://js13kgames.com/).
 
+Play the game here: https://nasearle.github.io/dungeon-xiii/
+
 ## Running locally
 
 From the root directory, install all dependencies:
